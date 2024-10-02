@@ -1,8 +1,8 @@
-import './App.css'
+import 'src/App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
-import NotFound from './pages/NotFound'
-import Play from './pages/Play'
+import Home from 'src/pages/Home'
+import NotFound from 'src/pages/NotFound'
+import Play from 'src/pages/Play'
 
 function App() {
   return (
