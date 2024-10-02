@@ -4,7 +4,7 @@ function Home() {
   return (
     <div>
       <h1>Sudoku Platform</h1>
-      <Link to="/play" >Play</Link>
+      <Link to="/play">Play</Link>
     </div>
   )
 }
