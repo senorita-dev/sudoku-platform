@@ -6,7 +6,7 @@ function Play() {
     <div className="flex flex-grow flex-col items-center p-2">
       <h1 className="text-4xl font-bold">Play</h1>
       <Link to="/">Home</Link>
-      <div className="h-[min(80vw,80vh)] w-[min(80vw,80vh)] bg-white">
+      <div className="h-[max(min(80vw,80vh),480px)] w-[max(min(80vw,80vh),480px)] bg-white">
         <SudokuGrid />
       </div>
     </div>
