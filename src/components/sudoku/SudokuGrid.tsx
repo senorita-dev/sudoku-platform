@@ -16,7 +16,12 @@ export default function SudokuGrid() {
 }
 
 function generateGrid(): number[][] {
-  return Array(9)
+  const grid = Array(9)
     .fill(0)
     .map(() => Array(9).fill(0))
+  grid[0][0] = null
+  grid[0][1] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  grid[0][2] = [1, 5, 9]
+  grid[0][3] = [9, 5, 6, 7]
+  return grid
 }
