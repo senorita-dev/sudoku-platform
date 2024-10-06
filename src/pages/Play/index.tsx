@@ -1,5 +1,10 @@
 import { Link } from 'react-router-dom'
 import SudokuGrid from 'src/components/sudoku/SudokuGrid'
+import { Grid } from 'src/types'
+
+const emptyGrid: Grid = Array(9)
+  .fill(null)
+  .map(() => Array(9).fill(null))
 
 function Play() {
   return (
@@ -7,7 +12,7 @@ function Play() {
       <h1 className="text-4xl font-bold">Play</h1>
       <Link to="/">Home</Link>
       <div className="h-[min(80vw,80vh)] w-[min(80vw,80vh)] bg-white">
-        <SudokuGrid />
+        <SudokuGrid grid={emptyGrid} />
       </div>
     </div>
   )
