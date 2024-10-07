@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom'
 import SudokuGrid from 'src/components/sudoku/SudokuGrid'
-import { useSudokuStore } from 'src/hooks/useSudokuStore'
+import { useSudokuActions } from 'src/hooks/useSudokuStore'
 
 function Play() {
-  const { state, dispatch } = useSudokuStore()
+  const dispatch = useSudokuActions()
 
   return (
     <div className="flex flex-grow flex-col items-center p-2">
@@ -12,7 +12,7 @@ function Play() {
       <button onClick={() => dispatch({ type: 'LOAD' })}>load</button>
       <button onClick={() => dispatch({ type: 'CLEAR' })}>clear</button>
       <div className="h-[min(80vw,80vh)] w-[min(80vw,80vh)] bg-white">
-        <SudokuGrid grid={state.grid} />
+        <SudokuGrid />
       </div>
     </div>
   )
