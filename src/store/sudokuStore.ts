@@ -29,9 +29,8 @@ function assertNever(action: never): never {
   throw new Error(`Invalid action: ${action}`)
 }
 
-const initialState: SudokuState = {
-  grid: getEmptyGrid(),
-}
+const savedState = localStorage.getItem('sudokuState')
+const initialState: SudokuState = savedState ? JSON.parse(savedState) : { grid: getEmptyGrid() }
 
 export function sudokuReducer(state = initialState, action: SudokuAction): SudokuState {
   switch (action.type) {
@@ -46,3 +45,7 @@ export function sudokuReducer(state = initialState, action: SudokuAction): Sudok
 }
 
 export const store = new BehaviorSubject<SudokuState>(initialState)
+
+store.subscribe((state) => {
+  localStorage.setItem('sudokuState', JSON.stringify(state))
+})
