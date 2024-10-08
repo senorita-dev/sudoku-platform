@@ -1,11 +1,8 @@
 import SudokuCell from './SudokuCell'
-import { Grid } from 'src/types'
+import { useSudokuState } from 'src/hooks/useSudokuStore'
 
-interface SudokuGridProps {
-  grid: Grid
-}
-
-export default function SudokuGrid({ grid }: SudokuGridProps) {
+export default function SudokuGrid() {
+  const { grid } = useSudokuState()
   return (
     <div className="grid h-full w-full grid-cols-9 grid-rows-9 overflow-hidden">
       {grid.map((row, rowIndex) =>
