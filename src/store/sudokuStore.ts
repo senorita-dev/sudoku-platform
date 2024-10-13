@@ -2,10 +2,11 @@ import { BehaviorSubject } from 'rxjs'
 import { Grid } from 'src/types'
 import { getSudoku } from 'sudoku-gen'
 
-export type SudokuAction = { type: 'LOAD' | 'CLEAR' }
+export type SudokuAction = { type: 'LOAD' | 'CLEAR' | 'RESET' }
 
 export interface SudokuState {
   grid: Grid
+  originalGrid: Grid
 }
 
 function getEmptyGrid(): Grid {
@@ -35,10 +36,15 @@ const initialState: SudokuState = savedState ? JSON.parse(savedState) : { grid: 
 export function sudokuReducer(state = initialState, action: SudokuAction): SudokuState {
   switch (action.type) {
     case 'LOAD': {
-      return { ...state, grid: getNewGrid() }
+      const newGrid = getNewGrid()
+      return { ...state, grid: newGrid, originalGrid: newGrid }
     }
-    case 'CLEAR':
-      return { ...state, grid: getEmptyGrid() }
+    case 'CLEAR': {
+      const newGrid = getEmptyGrid()
+      return { ...state, grid: newGrid, originalGrid: newGrid }
+    }
+    case 'RESET':
+      return { ...state, grid: state.originalGrid }
     default:
       return assertNever(action.type)
   }

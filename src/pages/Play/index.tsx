@@ -11,6 +11,7 @@ function Play() {
       <Link to="/">Home</Link>
       <button onClick={() => dispatch({ type: 'LOAD' })}>load</button>
       <button onClick={() => dispatch({ type: 'CLEAR' })}>clear</button>
+      <button onClick={() => dispatch({ type: 'RESET' })}>reset</button>
       <div className="h-[min(80vw,80vh)] w-[min(80vw,80vh)] bg-white">
         <SudokuGrid />
       </div>
