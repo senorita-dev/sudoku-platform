@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import SudokuGrid from 'src/components/sudoku/SudokuGrid'
-import { useSudokuActions } from 'src/hooks/useSudokuStore'
+import { useSudokuActions } from 'src/hooks/useSudokuState'
 
 function Play() {
   const dispatch = useSudokuActions()

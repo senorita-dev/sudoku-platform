@@ -1,6 +1,6 @@
 import SudokuCell from './SudokuCell'
 import { useEffect, useState } from 'react'
-import { useSudokuState } from 'src/hooks/useSudokuStore'
+import { useSudokuState } from 'src/hooks/useSudokuState'
 import { CellPosition, Grid } from 'src/types'
 
 const defaultCellPosition: CellPosition = { row: 0, col: 0 }
