@@ -35,6 +35,11 @@ export default function SudokuGrid() {
           type: 'INPUT_CELL',
           payload: { row: selectedCell.row, col: selectedCell.col, value: parseInt(key) },
         })
+      } else if (key === 'Delete' || key === 'Backspace') {
+        dispatch({
+          type: 'CLEAR_CELL',
+          payload: { row: selectedCell.row, col: selectedCell.col },
+        })
       }
     }
     document.addEventListener('keydown', handleKeyDown)

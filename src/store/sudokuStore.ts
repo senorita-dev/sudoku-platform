@@ -15,8 +15,12 @@ interface InputCellAction {
   type: 'INPUT_CELL'
   payload: { row: number; col: number; value: number }
 }
+interface ClearCellAction {
+  type: 'CLEAR_CELL'
+  payload: { row: number; col: number }
+}
 
-export type SudokuAction = LoadAction | ClearAction | ResetAction | InputCellAction
+export type SudokuAction = LoadAction | ClearAction | ResetAction | InputCellAction | ClearCellAction
 
 export interface SudokuState {
   grid: Grid
@@ -72,6 +76,12 @@ export function sudokuReducer(state = initialState, action: SudokuAction): Sudok
       }
       const newGrid = state.grid
       newGrid[row][col] = value
+      return { ...state, grid: newGrid }
+    }
+    case 'CLEAR_CELL': {
+      const { row, col } = action.payload
+      const newGrid = state.grid
+      newGrid[row][col] = null
       return { ...state, grid: newGrid }
     }
     default: {
