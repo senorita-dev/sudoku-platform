@@ -5,14 +5,22 @@ interface SudokuCellProps {
   value: Cell
   rowIndex: number
   colIndex: number
+  original: boolean
   selected: boolean
   setSelectedCell: Dispatch<SetStateAction<CellPosition>>
 }
 
-export default function SudokuCell({ value, rowIndex, colIndex, selected, setSelectedCell }: SudokuCellProps) {
+export default function SudokuCell({
+  value,
+  rowIndex,
+  colIndex,
+  original,
+  selected,
+  setSelectedCell,
+}: SudokuCellProps) {
   return (
     <div
-      className={`flex h-full w-full select-none items-center justify-center border text-2xl md:text-3xl lg:text-5xl ${selected ? 'bg-purple-200' : ''} ${colIndex % 3 === 2 ? 'border-r-4' : 'border-r'} ${colIndex === 0 ? 'border-l-4' : ''} ${rowIndex % 3 === 2 ? 'border-b-4' : 'border-b'} ${rowIndex === 0 ? 'border-t-4' : ''} `}
+      className={`flex h-full w-full select-none items-center justify-center border text-2xl md:text-3xl lg:text-5xl ${original ? 'font-semibold' : 'text-gray-400'} ${selected ? 'bg-gray-200' : ''} ${colIndex % 3 === 2 ? 'border-r-4' : 'border-r'} ${colIndex === 0 ? 'border-l-4' : ''} ${rowIndex % 3 === 2 ? 'border-b-4' : 'border-b'} ${rowIndex === 0 ? 'border-t-4' : ''} `}
       onClick={() => setSelectedCell({ row: rowIndex, col: colIndex })}
     >
       <CellComponent value={value} />

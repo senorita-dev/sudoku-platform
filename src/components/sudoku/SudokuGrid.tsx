@@ -7,7 +7,7 @@ const defaultCellPosition: CellPosition = { row: 0, col: 0 }
 const numbers = new Set(['1', '2', '3', '4', '5', '6', '7', '8', '9'])
 
 export default function SudokuGrid() {
-  const { grid } = useSudokuState()
+  const { grid, originalGrid } = useSudokuState()
   const dispatch = useSudokuActions()
   const [selectedCell, setSelectedCell] = useState<CellPosition>(defaultCellPosition)
 
@@ -55,6 +55,7 @@ export default function SudokuGrid() {
             value={cellValue}
             rowIndex={rowIndex}
             colIndex={colIndex}
+            original={typeof originalGrid[rowIndex][colIndex] === 'number'}
             selected={rowIndex === selectedCell.row && colIndex === selectedCell.col}
             setSelectedCell={setSelectedCell}
           />
