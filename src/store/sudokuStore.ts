@@ -71,6 +71,9 @@ export function sudokuReducer(state = initialState, action: SudokuAction): Sudok
     }
     case 'INPUT_CELL': {
       const { row, col, value } = action.payload
+      if (typeof state.originalGrid[row][col] === 'number') {
+        return state
+      }
       if (value < 1 || value > 9) {
         return state
       }
@@ -80,6 +83,9 @@ export function sudokuReducer(state = initialState, action: SudokuAction): Sudok
     }
     case 'CLEAR_CELL': {
       const { row, col } = action.payload
+      if (typeof state.originalGrid[row][col] === 'number') {
+        return state
+      }
       const newGrid = state.grid
       newGrid[row][col] = null
       return { ...state, grid: newGrid }
