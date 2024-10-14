@@ -35,7 +35,7 @@ export default function SudokuGrid() {
           type: 'INPUT_CELL',
           payload: { row: selectedCell.row, col: selectedCell.col, value: parseInt(key) },
         })
-      } else if (key === 'Delete' || key === 'Backspace') {
+      } else if (key === 'Delete' || key === 'Backspace' || key === '0') {
         dispatch({
           type: 'CLEAR_CELL',
           payload: { row: selectedCell.row, col: selectedCell.col },
