@@ -1,12 +1,14 @@
 import SudokuCell from './SudokuCell'
 import { useEffect, useState } from 'react'
-import { useSudokuState } from 'src/hooks/useSudokuStore'
+import { useSudokuActions, useSudokuState } from 'src/hooks/useSudokuStore'
 import { CellPosition, Grid } from 'src/types'
 
 const defaultCellPosition: CellPosition = { row: 0, col: 0 }
+const numbers = new Set(['1', '2', '3', '4', '5', '6', '7', '8', '9'])
 
 export default function SudokuGrid() {
   const { grid } = useSudokuState()
+  const dispatch = useSudokuActions()
   const [selectedCell, setSelectedCell] = useState<CellPosition>(defaultCellPosition)
 
   useEffect(() => {
@@ -28,11 +30,13 @@ export default function SudokuGrid() {
         setSelectedCell(({ row, col }) => ({ row, col: ctrlKey ? 0 : Math.max(col - 1, 0) }))
       } else if (key === 'ArrowRight') {
         setSelectedCell(({ row, col }) => ({ row, col: ctrlKey ? 8 : Math.min(col + 1, 8) }))
+      } else if (numbers.has(key)) {
+        dispatch({ type: 'INPUT_CELL', payload: { row: selectedCell.row, col: selectedCell.col, value: parseInt(key) }})
       }
     }
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [selectedCell, grid])
+  }, [selectedCell, grid, dispatch])
 
   return (
     <div className="grid h-full w-full grid-cols-9 grid-rows-9 overflow-hidden">

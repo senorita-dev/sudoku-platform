@@ -2,7 +2,21 @@ import { BehaviorSubject } from 'rxjs'
 import { Grid } from 'src/types'
 import { getSudoku } from 'sudoku-gen'
 
-export type SudokuAction = { type: 'LOAD' | 'CLEAR' | 'RESET' }
+interface LoadAction {
+  type: 'LOAD'
+}
+interface ClearAction {
+  type: 'CLEAR'
+}
+interface ResetAction {
+  type: 'RESET'
+}
+interface InputCellAction {
+  type: 'INPUT_CELL'
+  payload: { row: number; col: number; value: number }
+}
+
+export type SudokuAction = LoadAction | ClearAction | ResetAction | InputCellAction
 
 export interface SudokuState {
   grid: Grid
@@ -43,10 +57,22 @@ export function sudokuReducer(state = initialState, action: SudokuAction): Sudok
       const newGrid = getEmptyGrid()
       return { ...state, grid: newGrid, originalGrid: newGrid }
     }
-    case 'RESET':
+    case 'RESET': {
       return { ...state, grid: state.originalGrid }
-    default:
-      return assertNever(action.type)
+    }
+    case 'INPUT_CELL': {
+      const { row, col, value } = action.payload
+      if (value < 1 || value > 9) {
+        return state
+      }
+      const newGrid = state.grid
+      newGrid[row][col] = value
+      // grid[row][col] = value
+      return { ...state, grid: newGrid }
+    }
+    default: {
+      return assertNever(action)
+    }
   }
 }
 
