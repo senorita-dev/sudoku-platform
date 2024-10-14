@@ -45,20 +45,25 @@ function assertNever(action: never): never {
 }
 
 const savedState = localStorage.getItem('sudokuState')
-const initialState: SudokuState = savedState ? JSON.parse(savedState) : { grid: getEmptyGrid() }
+const initialState: SudokuState = savedState
+  ? JSON.parse(savedState)
+  : { grid: getEmptyGrid(), originalGrid: getEmptyGrid() }
 
 export function sudokuReducer(state = initialState, action: SudokuAction): SudokuState {
   switch (action.type) {
     case 'LOAD': {
-      const newGrid = getNewGrid()
-      return { ...state, grid: newGrid, originalGrid: newGrid }
+      const grid = getNewGrid()
+      const originalGrid = structuredClone(grid)
+      return { ...state, grid, originalGrid }
     }
     case 'CLEAR': {
-      const newGrid = getEmptyGrid()
-      return { ...state, grid: newGrid, originalGrid: newGrid }
+      const grid = getEmptyGrid()
+      const originalGrid = getEmptyGrid()
+      return { ...state, grid, originalGrid }
     }
     case 'RESET': {
-      return { ...state, grid: state.originalGrid }
+      const grid = structuredClone(state.originalGrid)
+      return { ...state, grid }
     }
     case 'INPUT_CELL': {
       const { row, col, value } = action.payload
@@ -67,7 +72,6 @@ export function sudokuReducer(state = initialState, action: SudokuAction): Sudok
       }
       const newGrid = state.grid
       newGrid[row][col] = value
-      // grid[row][col] = value
       return { ...state, grid: newGrid }
     }
     default: {

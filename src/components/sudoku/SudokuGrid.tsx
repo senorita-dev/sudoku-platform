@@ -31,7 +31,10 @@ export default function SudokuGrid() {
       } else if (key === 'ArrowRight') {
         setSelectedCell(({ row, col }) => ({ row, col: ctrlKey ? 8 : Math.min(col + 1, 8) }))
       } else if (numbers.has(key)) {
-        dispatch({ type: 'INPUT_CELL', payload: { row: selectedCell.row, col: selectedCell.col, value: parseInt(key) }})
+        dispatch({
+          type: 'INPUT_CELL',
+          payload: { row: selectedCell.row, col: selectedCell.col, value: parseInt(key) },
+        })
       }
     }
     document.addEventListener('keydown', handleKeyDown)
