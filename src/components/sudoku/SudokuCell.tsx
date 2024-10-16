@@ -1,3 +1,4 @@
+import React from 'react'
 import { Dispatch, SetStateAction } from 'react'
 import { Cell, CellPosition } from 'src/types'
 
@@ -10,7 +11,7 @@ interface SudokuCellProps {
   setSelectedCell: Dispatch<SetStateAction<CellPosition>>
 }
 
-export default function SudokuCell({
+function SudokuCell({
   value,
   rowIndex,
   colIndex,
@@ -52,3 +53,5 @@ function CandidatesCell({ candidates }: { candidates: number[] }) {
     </div>
   )
 }
+
+export default React.memo(SudokuCell)
