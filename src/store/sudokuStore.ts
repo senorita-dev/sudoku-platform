@@ -33,6 +33,10 @@ function getEmptyGrid(): Grid {
     .map(() => Array(9).fill(null))
 }
 
+function isGridEmpty(grid: Grid) {
+  return grid.every((row) => row.every((cell) => cell === null))
+}
+
 function getNewGrid(): Grid {
   const sudoku = getSudoku()
   const newGrid = getEmptyGrid()
@@ -61,6 +65,9 @@ export function sudokuReducer(state = initialState, action: SudokuAction): Sudok
       return { ...state, grid, originalGrid }
     }
     case 'CLEAR': {
+      if (isGridEmpty(state.grid) && isGridEmpty(state.originalGrid)) {
+        return state
+      }
       const grid = getEmptyGrid()
       const originalGrid = getEmptyGrid()
       return { ...state, grid, originalGrid }
