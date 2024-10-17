@@ -96,7 +96,7 @@ export function sudokuReducer(state = initialState, action: SudokuAction): Sudok
       if (typeof state.originalGrid[row][col] === 'number') {
         return state
       }
-      const newGrid = state.grid
+      const newGrid = structuredClone(state.grid)
       newGrid[row][col] = null
       return { ...state, grid: newGrid }
     }
