@@ -3,7 +3,11 @@ import { SudokuAction, SudokuState, store, sudokuReducer } from 'src/store/sudok
 
 export function useSudokuActions() {
   const dispatch = useCallback((action: SudokuAction) => {
-    store.next(sudokuReducer(store.getValue(), action))
+    const currentState = store.getValue()
+    const newState = sudokuReducer(currentState, action)
+    if (newState !== currentState) {
+      store.next(newState)
+    }
   }, [])
 
   return dispatch
