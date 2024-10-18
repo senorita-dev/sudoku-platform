@@ -52,10 +52,12 @@ function assertNever(action: never): never {
   throw new Error(`Invalid action: ${action}`)
 }
 
+const defaultState: SudokuState = {
+  grid: getEmptyGrid(),
+  originalGrid: getEmptyGrid(),
+}
 const savedState = localStorage.getItem('sudokuState')
-const initialState: SudokuState = savedState
-  ? JSON.parse(savedState)
-  : { grid: getEmptyGrid(), originalGrid: getEmptyGrid() }
+const initialState: SudokuState = savedState ? JSON.parse(savedState) : defaultState
 
 export function sudokuReducer(state = initialState, action: SudokuAction): SudokuState {
   switch (action.type) {
