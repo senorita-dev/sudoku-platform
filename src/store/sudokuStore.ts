@@ -11,6 +11,10 @@ interface ClearAction {
 interface ResetAction {
   type: 'RESET'
 }
+interface SetEditModeAction {
+  type: 'SET_EDIT_MODE'
+  payload: 'normal' | 'pencil'
+}
 interface InputCellAction {
   type: 'INPUT_CELL'
   payload: { row: number; col: number; value: number }
@@ -20,11 +24,18 @@ interface ClearCellAction {
   payload: { row: number; col: number }
 }
 
-export type SudokuAction = LoadAction | ClearAction | ResetAction | InputCellAction | ClearCellAction
+export type SudokuAction =
+  | LoadAction
+  | ClearAction
+  | ResetAction
+  | InputCellAction
+  | ClearCellAction
+  | SetEditModeAction
 
 export interface SudokuState {
   grid: Grid
   originalGrid: Grid
+  editMode: 'normal' | 'pencil'
 }
 
 function getEmptyGrid(): Grid {
@@ -55,6 +66,7 @@ function assertNever(action: never): never {
 const defaultState: SudokuState = {
   grid: getEmptyGrid(),
   originalGrid: getEmptyGrid(),
+  editMode: 'normal',
 }
 const savedState = localStorage.getItem('sudokuState')
 const initialState: SudokuState = savedState ? JSON.parse(savedState) : defaultState
@@ -78,20 +90,43 @@ export function sudokuReducer(state = initialState, action: SudokuAction): Sudok
       const grid = structuredClone(state.originalGrid)
       return { ...state, grid }
     }
+    case 'SET_EDIT_MODE': {
+      const editMode = action.payload
+      if (editMode === state.editMode) {
+        return state
+      }
+      return { ...state, editMode }
+    }
     case 'INPUT_CELL': {
       const { row, col, value } = action.payload
-      if (typeof state.originalGrid[row][col] === 'number') {
-        return state
+      if (state.editMode === 'normal') {
+        if (typeof state.originalGrid[row][col] === 'number') {
+          return state
+        }
+        if (value < 1 || value > 9) {
+          return state
+        }
+        if (value === state.grid[row][col]) {
+          return state
+        }
+        const newGrid = structuredClone(state.grid)
+        newGrid[row][col] = value
+        return { ...state, grid: newGrid }
+      } else {
+        if (typeof state.originalGrid[row][col] === 'number') {
+          return state
+        }
+        const currentCell = state.grid[row][col]
+        if (Array.isArray(currentCell) && currentCell.includes(value)) {
+          return state
+        }
+        const newGrid = structuredClone(state.grid)
+        if (!Array.isArray(newGrid[row][col])) {
+          newGrid[row][col] = []
+        }
+        newGrid[row][col].push(value)
+        return { ...state, grid: newGrid }
       }
-      if (value < 1 || value > 9) {
-        return state
-      }
-      if (value === state.grid[row][col]) {
-        return state
-      }
-      const newGrid = structuredClone(state.grid)
-      newGrid[row][col] = value
-      return { ...state, grid: newGrid }
     }
     case 'CLEAR_CELL': {
       const { row, col } = action.payload
