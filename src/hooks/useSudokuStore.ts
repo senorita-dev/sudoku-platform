@@ -1,6 +1,18 @@
 import { useCallback, useEffect, useState } from 'react'
 import { SudokuAction, SudokuState, store, sudokuReducer } from 'src/store/sudokuStore'
 
+export function useSudokuActions() {
+  const dispatch = useCallback((action: SudokuAction) => {
+    const currentState = store.getValue()
+    const newState = sudokuReducer(currentState, action)
+    if (newState !== currentState) {
+      store.next(newState)
+    }
+  }, [])
+
+  return dispatch
+}
+
 export function useSudokuState() {
   const [state, setState] = useState<SudokuState>(store.getValue())
 
@@ -10,19 +22,4 @@ export function useSudokuState() {
   }, [])
 
   return state
-}
-
-export function useSudokuActions() {
-  const dispatch = useCallback((action: SudokuAction) => {
-    store.next(sudokuReducer(store.getValue(), action))
-  }, [])
-
-  return dispatch
-}
-
-export function useSudokuStore() {
-  const state = useSudokuState()
-  const dispatch = useSudokuActions()
-
-  return { state, dispatch }
 }
