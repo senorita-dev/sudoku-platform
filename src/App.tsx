@@ -1,7 +1,7 @@
+import Home from '@/pages/Home'
+import NotFound from '@/pages/NotFound'
+import Play from '@/pages/Play'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
-import Home from 'src/pages/Home'
-import NotFound from 'src/pages/NotFound'
-import Play from 'src/pages/Play'
 
 function App() {
   return (

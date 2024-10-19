@@ -1,7 +1,7 @@
-import SudokuCell from './SudokuCell'
+import SudokuCell from '@/components/sudoku/SudokuCell'
+import { useSudokuActions, useSudokuState } from '@/hooks/useSudokuStore'
+import { CellPosition, Grid } from '@/types'
 import { useEffect, useState } from 'react'
-import { useSudokuActions, useSudokuState } from 'src/hooks/useSudokuStore'
-import { CellPosition, Grid } from 'src/types'
 
 const defaultCellPosition: CellPosition = { row: 0, col: 0 }
 const numbers = new Set(['1', '2', '3', '4', '5', '6', '7', '8', '9'])

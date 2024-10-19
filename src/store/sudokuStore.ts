@@ -1,5 +1,5 @@
+import { Grid } from '@/types'
 import { BehaviorSubject } from 'rxjs'
-import { Grid } from 'src/types'
 import { getSudoku } from 'sudoku-gen'
 
 interface LoadAction {
