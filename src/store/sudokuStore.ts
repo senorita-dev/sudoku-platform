@@ -1,6 +1,8 @@
 import { Grid } from '@/types'
 import { BehaviorSubject } from 'rxjs'
 import { getSudoku } from 'sudoku-gen'
+import { Difficulty } from 'sudoku-gen/dist/types/difficulty.type'
+import { Sudoku } from 'sudoku-gen/dist/types/sudoku.type'
 
 interface LoadAction {
   type: 'LOAD'
@@ -36,6 +38,7 @@ export interface SudokuState {
   grid: Grid
   originalGrid: Grid
   editMode: 'normal' | 'pencil'
+  difficulty: Difficulty | null
 }
 
 function getEmptyGrid(): Grid {
@@ -48,8 +51,7 @@ function isGridEmpty(grid: Grid) {
   return grid.every((row) => row.every((cell) => cell === null))
 }
 
-function getNewGrid(): Grid {
-  const sudoku = getSudoku()
+function getGridFromSudoku(sudoku: Sudoku): Grid {
   const newGrid = getEmptyGrid()
   sudoku.puzzle.split('').forEach((char, index) => {
     const row = Math.floor(index / 9)
@@ -67,6 +69,7 @@ const defaultState: SudokuState = {
   grid: getEmptyGrid(),
   originalGrid: getEmptyGrid(),
   editMode: 'normal',
+  difficulty: null,
 }
 const savedState = localStorage.getItem('sudokuState')
 const initialState: SudokuState = savedState ? JSON.parse(savedState) : defaultState
@@ -74,9 +77,10 @@ const initialState: SudokuState = savedState ? JSON.parse(savedState) : defaultS
 export function sudokuReducer(state = initialState, action: SudokuAction): SudokuState {
   switch (action.type) {
     case 'LOAD': {
-      const grid = getNewGrid()
+      const sudoku = getSudoku()
+      const grid = getGridFromSudoku(sudoku)
       const originalGrid = structuredClone(grid)
-      return { ...state, grid, originalGrid }
+      return { ...state, grid, originalGrid, difficulty: sudoku.difficulty }
     }
     case 'CLEAR': {
       if (isGridEmpty(state.grid) && isGridEmpty(state.originalGrid)) {
@@ -84,7 +88,7 @@ export function sudokuReducer(state = initialState, action: SudokuAction): Sudok
       }
       const grid = getEmptyGrid()
       const originalGrid = getEmptyGrid()
-      return { ...state, grid, originalGrid }
+      return { ...state, grid, originalGrid, difficulty: null }
     }
     case 'RESET': {
       const grid = structuredClone(state.originalGrid)
