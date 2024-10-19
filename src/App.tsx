@@ -5,7 +5,7 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 
 function App() {
   return (
-    <div className="min-h-dvh bg-stone-200">
+    <div className="min-h-dvh">
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
