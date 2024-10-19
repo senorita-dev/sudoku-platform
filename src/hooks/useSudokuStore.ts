@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react'
 import { SudokuAction, SudokuState, store, sudokuReducer } from '@/store/sudokuStore'
+import { useCallback, useEffect, useState } from 'react'
 
 export function useSudokuActions() {
   const dispatch = useCallback((action: SudokuAction) => {

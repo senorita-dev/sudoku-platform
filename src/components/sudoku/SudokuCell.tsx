@@ -1,6 +1,6 @@
+import { Cell, CellPosition } from '@/types'
 import React from 'react'
 import { Dispatch, SetStateAction } from 'react'
-import { Cell, CellPosition } from '@/types'
 
 interface SudokuCellProps {
   value: Cell
