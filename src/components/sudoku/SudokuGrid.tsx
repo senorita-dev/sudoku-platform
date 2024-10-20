@@ -1,50 +1,49 @@
 import SudokuCell from '@/components/sudoku/SudokuCell'
 import { useSudokuActions, useSudokuState } from '@/hooks/useSudokuStore'
 import { CellPosition, Grid } from '@/types'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
-const defaultCellPosition: CellPosition = { row: 0, col: 0 }
 const numbers = new Set(['1', '2', '3', '4', '5', '6', '7', '8', '9'])
 
 export default function SudokuGrid() {
-  const { grid, originalGrid } = useSudokuState()
+  const { grid, originalGrid, selectedPosition } = useSudokuState()
   const dispatch = useSudokuActions()
-  const [selectedCell, setSelectedCell] = useState<CellPosition>(defaultCellPosition)
 
   useEffect(() => {
+    const { row, col } = selectedPosition
     const handleKeyDown = (event: KeyboardEvent) => {
       const { shiftKey, ctrlKey, key } = event
       if (key === 'Tab') {
         const unsolvedCellPosition = shiftKey
-          ? getPrevUnsolvedCell(selectedCell, grid)
-          : getNextUnsolvedCell(selectedCell, grid)
+          ? getPrevUnsolvedCell(selectedPosition, grid)
+          : getNextUnsolvedCell(selectedPosition, grid)
         if (unsolvedCellPosition !== undefined) {
-          setSelectedCell(unsolvedCellPosition)
+          dispatch({ type: 'SET_SELECTED_POSITION', payload: unsolvedCellPosition })
         }
         event.preventDefault()
       } else if (key === 'ArrowUp') {
-        setSelectedCell(({ row, col }) => ({ row: ctrlKey ? 0 : Math.max(row - 1, 0), col }))
+        dispatch({ type: 'SET_SELECTED_POSITION', payload: { row: ctrlKey ? 0 : Math.max(row - 1, 0), col } })
       } else if (key === 'ArrowDown') {
-        setSelectedCell(({ row, col }) => ({ row: ctrlKey ? 8 : Math.min(row + 1, 8), col }))
+        dispatch({ type: 'SET_SELECTED_POSITION', payload: { row: ctrlKey ? 8 : Math.min(row + 1, 8), col } })
       } else if (key === 'ArrowLeft') {
-        setSelectedCell(({ row, col }) => ({ row, col: ctrlKey ? 0 : Math.max(col - 1, 0) }))
+        dispatch({ type: 'SET_SELECTED_POSITION', payload: { row, col: ctrlKey ? 0 : Math.max(col - 1, 0) } })
       } else if (key === 'ArrowRight') {
-        setSelectedCell(({ row, col }) => ({ row, col: ctrlKey ? 8 : Math.min(col + 1, 8) }))
+        dispatch({ type: 'SET_SELECTED_POSITION', payload: { row, col: ctrlKey ? 8 : Math.min(col + 1, 8) } })
       } else if (numbers.has(key)) {
         dispatch({
           type: 'INPUT_CELL',
-          payload: { row: selectedCell.row, col: selectedCell.col, value: parseInt(key) },
+          payload: { row: selectedPosition.row, col: selectedPosition.col, value: parseInt(key) },
         })
       } else if (key === 'Delete' || key === 'Backspace' || key === '0') {
         dispatch({
           type: 'CLEAR_CELL',
-          payload: { row: selectedCell.row, col: selectedCell.col },
+          payload: { row: selectedPosition.row, col: selectedPosition.col },
         })
       }
     }
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [selectedCell, grid, dispatch])
+  }, [selectedPosition, grid, dispatch])
 
   return (
     <div className="grid h-full w-full grid-cols-9 grid-rows-9 overflow-hidden">
@@ -53,11 +52,10 @@ export default function SudokuGrid() {
           <SudokuCell
             key={`${rowIndex}-${colIndex}`}
             value={cellValue}
-            rowIndex={rowIndex}
-            colIndex={colIndex}
+            row={rowIndex}
+            col={colIndex}
             original={typeof originalGrid[rowIndex][colIndex] === 'number'}
-            selected={rowIndex === selectedCell.row && colIndex === selectedCell.col}
-            setSelectedCell={setSelectedCell}
+            selected={rowIndex === selectedPosition.row && colIndex === selectedPosition.col}
           />
         )),
       )}

@@ -1,21 +1,21 @@
-import { Cell, CellPosition } from '@/types'
+import { useSudokuActions } from '@/hooks/useSudokuStore'
+import { Cell } from '@/types'
 import React from 'react'
-import { Dispatch, SetStateAction } from 'react'
 
 interface SudokuCellProps {
   value: Cell
-  rowIndex: number
-  colIndex: number
+  row: number
+  col: number
   original: boolean
   selected: boolean
-  setSelectedCell: Dispatch<SetStateAction<CellPosition>>
 }
 
-function SudokuCell({ value, rowIndex, colIndex, original, selected, setSelectedCell }: SudokuCellProps) {
+function SudokuCell({ value, row, col, original, selected }: SudokuCellProps) {
+  const dispatch = useSudokuActions()
   return (
     <div
-      className={`flex h-full w-full select-none items-center justify-center border text-2xl md:text-3xl lg:text-5xl ${original ? 'font-semibold' : 'text-gray-400'} ${selected ? 'bg-gray-200' : ''} ${colIndex % 3 === 2 ? 'border-r-4' : 'border-r'} ${colIndex === 0 ? 'border-l-4' : ''} ${rowIndex % 3 === 2 ? 'border-b-4' : 'border-b'} ${rowIndex === 0 ? 'border-t-4' : ''} `}
-      onClick={() => setSelectedCell({ row: rowIndex, col: colIndex })}
+      className={`flex h-full w-full select-none items-center justify-center border text-2xl md:text-3xl lg:text-5xl ${original ? 'font-semibold' : 'text-gray-400'} ${selected ? 'bg-gray-200' : ''} ${col % 3 === 2 ? 'border-r-4' : 'border-r'} ${col === 0 ? 'border-l-4' : ''} ${row % 3 === 2 ? 'border-b-4' : 'border-b'} ${row === 0 ? 'border-t-4' : ''} `}
+      onClick={() => dispatch({ type: 'SET_SELECTED_POSITION', payload: { row, col } })}
     >
       <CellComponent value={value} />
     </div>

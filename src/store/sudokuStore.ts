@@ -1,4 +1,4 @@
-import { Grid } from '@/types'
+import { CellPosition, Grid } from '@/types'
 import { BehaviorSubject } from 'rxjs'
 import { getSudoku } from 'sudoku-gen'
 import { Difficulty } from 'sudoku-gen/dist/types/difficulty.type'
@@ -28,6 +28,10 @@ interface ClearCellAction {
 interface ShowSolutionAction {
   type: 'SHOW_SOLUTION'
 }
+interface SetSelectedPositionAction {
+  type: 'SET_SELECTED_POSITION'
+  payload: CellPosition
+}
 
 export type SudokuAction =
   | LoadAction
@@ -37,6 +41,7 @@ export type SudokuAction =
   | ClearCellAction
   | SetEditModeAction
   | ShowSolutionAction
+  | SetSelectedPositionAction
 
 export interface SudokuState {
   grid: Grid
@@ -44,6 +49,7 @@ export interface SudokuState {
   solutionGrid: Grid | null
   difficulty: Difficulty | null
   editMode: 'normal' | 'pencil'
+  selectedPosition: CellPosition
 }
 
 function getEmptyGrid(): Grid {
@@ -76,6 +82,7 @@ const defaultState: SudokuState = {
   solutionGrid: null,
   difficulty: null,
   editMode: 'normal',
+  selectedPosition: { row: 0, col: 0 },
 }
 const savedState = localStorage.getItem('sudokuState')
 const initialState: SudokuState = savedState ? JSON.parse(savedState) : defaultState
@@ -154,6 +161,13 @@ export function sudokuReducer(state = initialState, action: SudokuAction): Sudok
       }
       const newGrid = structuredClone(state.solutionGrid)
       return { ...state, grid: newGrid }
+    }
+    case 'SET_SELECTED_POSITION': {
+      const newPosition = action.payload
+      if (state.selectedPosition.row === newPosition.row && state.selectedPosition.col === newPosition.col) {
+        return state
+      }
+      return { ...state, selectedPosition: newPosition }
     }
     default: {
       return assertNever(action)
