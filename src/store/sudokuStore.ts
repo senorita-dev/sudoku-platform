@@ -1,9 +1,11 @@
 import { Grid } from '@/types'
 import { BehaviorSubject } from 'rxjs'
 import { getSudoku } from 'sudoku-gen'
+import { Difficulty } from 'sudoku-gen/dist/types/difficulty.type'
 
 interface LoadAction {
   type: 'LOAD'
+  payload: Difficulty | null
 }
 interface ClearAction {
   type: 'CLEAR'
@@ -35,6 +37,8 @@ export type SudokuAction =
 export interface SudokuState {
   grid: Grid
   originalGrid: Grid
+  solutionGrid: Grid | null
+  difficulty: Difficulty | null
   editMode: 'normal' | 'pencil'
 }
 
@@ -48,10 +52,9 @@ function isGridEmpty(grid: Grid) {
   return grid.every((row) => row.every((cell) => cell === null))
 }
 
-function getNewGrid(): Grid {
-  const sudoku = getSudoku()
+function getGridFromPuzzle(puzzle: string): Grid {
   const newGrid = getEmptyGrid()
-  sudoku.puzzle.split('').forEach((char, index) => {
+  puzzle.split('').forEach((char, index) => {
     const row = Math.floor(index / 9)
     const col = index % 9
     newGrid[row][col] = char === '-' ? null : parseInt(char)
@@ -66,6 +69,8 @@ function assertNever(action: never): never {
 const defaultState: SudokuState = {
   grid: getEmptyGrid(),
   originalGrid: getEmptyGrid(),
+  solutionGrid: null,
+  difficulty: null,
   editMode: 'normal',
 }
 const savedState = localStorage.getItem('sudokuState')
@@ -74,9 +79,11 @@ const initialState: SudokuState = savedState ? JSON.parse(savedState) : defaultS
 export function sudokuReducer(state = initialState, action: SudokuAction): SudokuState {
   switch (action.type) {
     case 'LOAD': {
-      const grid = getNewGrid()
+      const { difficulty, puzzle, solution } = getSudoku(action.payload ?? undefined)
+      const grid = getGridFromPuzzle(puzzle)
       const originalGrid = structuredClone(grid)
-      return { ...state, grid, originalGrid }
+      const solutionGrid = getGridFromPuzzle(solution)
+      return { ...state, grid, originalGrid, solutionGrid, difficulty }
     }
     case 'CLEAR': {
       if (isGridEmpty(state.grid) && isGridEmpty(state.originalGrid)) {
@@ -84,7 +91,7 @@ export function sudokuReducer(state = initialState, action: SudokuAction): Sudok
       }
       const grid = getEmptyGrid()
       const originalGrid = getEmptyGrid()
-      return { ...state, grid, originalGrid }
+      return { ...state, grid, originalGrid, solutionGrid: null, difficulty: null }
     }
     case 'RESET': {
       const grid = structuredClone(state.originalGrid)

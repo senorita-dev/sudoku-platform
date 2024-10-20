@@ -23,3 +23,18 @@ export function useSudokuState() {
 
   return state
 }
+
+export function useSudokuDifficulty(): SudokuState['difficulty'] {
+  const [difficulty, setDifficulty] = useState<SudokuState['difficulty']>(store.getValue().difficulty)
+
+  useEffect(() => {
+    const subscription = store.subscribe((state) => {
+      if (state.difficulty !== difficulty) {
+        setDifficulty(state.difficulty)
+      }
+    })
+    return () => subscription.unsubscribe()
+  }, [difficulty])
+
+  return difficulty
+}
