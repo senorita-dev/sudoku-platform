@@ -1,9 +1,10 @@
 import SudokuGrid from '@/components/sudoku/SudokuGrid'
-import { useSudokuActions } from '@/hooks/useSudokuStore'
+import { useSudokuActions, useSudokuState } from '@/hooks/useSudokuStore'
 import { Link } from 'react-router-dom'
 
 function Play() {
   const dispatch = useSudokuActions()
+  const { difficulty } = useSudokuState()
 
   return (
     <div className="flex flex-grow flex-col items-center p-2">
@@ -18,6 +19,9 @@ function Play() {
       </div>
       <div className="h-[min(80vw,80vh)] w-[min(80vw,80vh)] bg-white">
         <SudokuGrid />
+      </div>
+      <div>
+        <span>{difficulty && <>difficulty: {difficulty}</>} </span>
       </div>
     </div>
   )
