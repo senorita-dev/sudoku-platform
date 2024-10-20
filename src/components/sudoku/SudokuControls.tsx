@@ -33,6 +33,9 @@ export default function SudokuControls() {
       <Button variant="outline" onClick={() => dispatch({ type: 'SET_EDIT_MODE', payload: 'pencil' })}>
         edit pencil mode
       </Button>
+      <Button variant="outline" onClick={() => dispatch({ type: 'SHOW_SOLUTION' })}>
+        show solution
+      </Button>
     </Card>
   )
 }
