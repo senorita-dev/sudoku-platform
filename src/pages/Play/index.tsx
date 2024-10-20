@@ -8,12 +8,12 @@ function Play() {
   const difficulty = useSudokuDifficulty()
 
   return (
-    <div className="flex flex-grow flex-col">
+    <div className="flex flex-col">
       <header className="text-center">
         <h1 className="text-4xl font-bold">Play</h1>
         <Link to="/">Home</Link>
       </header>
-      <div className="flex flex-grow">
+      <div className="flex flex-grow flex-col md:flex-row">
         <Left />
         <Main>
           <SudokuGrid />
@@ -39,7 +39,7 @@ function Right({ children }: { children: React.ReactNode }) {
 
 function Main({ children }: { children: React.ReactNode }) {
   return (
-    <main className="flex flex-grow items-center justify-center p-4">
+    <main className="flex flex-grow items-center justify-center">
       <div className="h-[min(80vw,80vh)] w-[min(80vw,80vh)] bg-white">{children}</div>
     </main>
   )
