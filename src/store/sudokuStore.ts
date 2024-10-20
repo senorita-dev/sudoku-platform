@@ -25,6 +25,9 @@ interface ClearCellAction {
   type: 'CLEAR_CELL'
   payload: { row: number; col: number }
 }
+interface ShowSolutionAction {
+  type: 'SHOW_SOLUTION'
+}
 
 export type SudokuAction =
   | LoadAction
@@ -33,6 +36,7 @@ export type SudokuAction =
   | InputCellAction
   | ClearCellAction
   | SetEditModeAction
+  | ShowSolutionAction
 
 export interface SudokuState {
   grid: Grid
@@ -142,6 +146,13 @@ export function sudokuReducer(state = initialState, action: SudokuAction): Sudok
       }
       const newGrid = structuredClone(state.grid)
       newGrid[row][col] = null
+      return { ...state, grid: newGrid }
+    }
+    case 'SHOW_SOLUTION': {
+      if (state.solutionGrid === null) {
+        return state
+      }
+      const newGrid = structuredClone(state.solutionGrid)
       return { ...state, grid: newGrid }
     }
     default: {
