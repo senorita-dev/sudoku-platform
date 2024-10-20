@@ -5,6 +5,7 @@ import { Difficulty } from 'sudoku-gen/dist/types/difficulty.type'
 
 interface LoadAction {
   type: 'LOAD'
+  payload: Difficulty | null
 }
 interface ClearAction {
   type: 'CLEAR'
@@ -78,7 +79,7 @@ const initialState: SudokuState = savedState ? JSON.parse(savedState) : defaultS
 export function sudokuReducer(state = initialState, action: SudokuAction): SudokuState {
   switch (action.type) {
     case 'LOAD': {
-      const { difficulty, puzzle, solution } = getSudoku()
+      const { difficulty, puzzle, solution } = getSudoku(action.payload ?? undefined)
       const grid = getGridFromPuzzle(puzzle)
       const originalGrid = structuredClone(grid)
       const solutionGrid = getGridFromPuzzle(solution)
